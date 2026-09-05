@@ -857,8 +857,10 @@ html[dir="rtl"] .eyebrow::after{
 
     window[callbackName] = function(data){
       cleanup();
-      if(data && data.success && data.reply){
-        const answer = escapeHtml(data.reply).replace(/\\n/g, '<br>');
+      const returnedReply = data && data.reply ? String(data.reply) : '';
+      const containsPrivateApiError = /gemini\\s*api\\s*error|quota exceeded|generativelanguage\\.googleapis|rate[- ]limits|api key|billing details/i.test(returnedReply);
+      if(data && data.success && returnedReply && !containsPrivateApiError){
+        const answer = escapeHtml(returnedReply).replace(/\\n/g, '<br>');
         assistantResponseCache[cacheKey] = answer;
         reply.innerHTML = answer;
         return;
