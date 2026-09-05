@@ -786,6 +786,8 @@ html[dir="rtl"] .eyebrow::after{
   const formInputs = form ? Array.from(form.querySelectorAll('input')) : [];
   const nameInput = formInputs[0] || null;
   const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwQ-A67jtOTipdOqvMZZo246dU1-fM_rWzrcQTMGT9Wru5W_DIVrwI4mf3SZdsrJYiN/exec';
+  let geminiRequestInFlight = false;
+  const assistantResponseCache = Object.create(null);
 
   const trackInfo = {
     'Outstanding Outside Plant (OSP) Access': {
@@ -828,41 +830,49 @@ html[dir="rtl"] .eyebrow::after{
       return;
     }
 
+    const cacheKey = normalize(question);
+    if(assistantResponseCache[cacheKey]){
+      openAssistant(assistantResponseCache[cacheKey]);
+      return;
+    }
+    if(geminiRequestInFlight) return;
+    geminiRequestInFlight = true;
+    if(assistantSend) assistantSend.disabled = true;
+
     openAssistant('Checking the workshop information...');
     const callbackName = 'commulogyGemini_' + Date.now();
     const script = document.createElement('script');
     const timeout = setTimeout(function(){
       cleanup();
-      reply.innerHTML = '❌ لم يصل رد من الخادم خلال الوقت المحدد.<br><small>تأكد من نشر Google Apps Script كإصدار جديد، ومن صلاحية رابط Web App.</small>';
+      reply.innerHTML = smartAnswer(question);
     }, 60000);
 
     function cleanup(){
       clearTimeout(timeout);
       delete window[callbackName];
       if(script.parentNode) script.parentNode.removeChild(script);
+      geminiRequestInFlight = false;
+      if(assistantSend) assistantSend.disabled = false;
     }
 
     window[callbackName] = function(data){
       cleanup();
       if(data && data.success && data.reply){
-        reply.innerHTML = escapeHtml(data.reply).replace(/\\n/g, '<br>');
+        const answer = escapeHtml(data.reply).replace(/\\n/g, '<br>');
+        assistantResponseCache[cacheKey] = answer;
+        reply.innerHTML = answer;
         return;
       }
 
-      // Show the real server/API error. Never claim that Gemini is unavailable
-      // for the user unless the server explicitly reports that exact reason.
-      const serverError = data && (data.error || data.message || data.details);
-      if(serverError){
-        reply.innerHTML = '❌ تعذر الحصول على الرد.<br><small>' + escapeHtml(serverError) + '</small>';
-      } else {
-        reply.innerHTML = '❌ تعذر الحصول على رد من المساعد. أعد المحاولة أو تحقق من إعدادات الخادم.';
-      }
+      reply.innerHTML = smartAnswer(question);
+      assistantResponseCache[cacheKey] = reply.innerHTML;
     };
 
     script.src = WEB_APP_URL + '?action=chat&message=' + encodeURIComponent(question) + '&callback=' + callbackName;
     script.onerror = function(){
       cleanup();
-      reply.innerHTML = '❌ فشل الاتصال بخادم المساعد.<br><small>تحقق من رابط Google Apps Script ومن نشره بصلاحية Anyone.</small>';
+      reply.innerHTML = smartAnswer(question);
+      assistantResponseCache[cacheKey] = reply.innerHTML;
     };
     document.body.appendChild(script);
   }
