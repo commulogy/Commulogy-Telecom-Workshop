@@ -734,7 +734,7 @@ html[dir="rtl"] .eyebrow::after{
 <section id="register" class="section">
   <div class="section-head">
     <h2>Registration</h2>
-    <p>Prototype only. Nothing is sent or stored yet.</p>
+    <p>Register once and receive the workshop access link by email.</p>
   </div>
 
   <div class="register-grid">
@@ -797,7 +797,7 @@ html[dir="rtl"] .eyebrow::after{
             <option>All 3 Sessions</option>
           </select>
         </div>
-        <div class="note full">Your registration details will be recorded securely in our workshop registration sheet.</div>
+        <div class="note full">After registration, the Microsoft Teams access link will be sent to your email.</div>
         <button class="submit" type="submit">Confirm Registration</button>
       </form>
       <div class="success" id="success" aria-live="polite"></div>
@@ -855,6 +855,7 @@ html[dir="rtl"] .eyebrow::after{
   const formInputs = form ? Array.from(form.querySelectorAll('input')) : [];
   const nameInput = formInputs[0] || null;
   const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwQ-A67jtOTipdOqvMZZo246dU1-fM_rWzrcQTMGT9Wru5W_DIVrwI4mf3SZdsrJYiN/exec';
+  const SESSION_LINK = 'https://events.teams.microsoft.com/event/235a05ff-6488-4e9d-b0e4-963741c2828f@4913136b-a631-429f-8647-b22117449231?source=copyLinkLegacyShareEventDialog';
   let geminiRequestInFlight = false;
   const assistantResponseCache = Object.create(null);
 
@@ -1205,7 +1206,8 @@ html[dir="rtl"] .eyebrow::after{
         company: formInputs[3] ? formInputs[3].value.trim() : '',
         status: formSelects[0] ? formSelects[0].value : '',
         experience: formSelects[1] ? formSelects[1].value : '',
-        session: selectedTrack
+        session: selectedTrack,
+        sessionLink: SESSION_LINK
       };
 
       if(submitButton){
@@ -1224,7 +1226,7 @@ html[dir="rtl"] .eyebrow::after{
           body: JSON.stringify(payload)
         });
         success.className = 'success';
-        success.innerHTML = '✅ Registration completed successfully for <b>' + participant + '</b>.<br>Selected session: <b>' + selectedTrack + '</b>.';
+        success.innerHTML = '✅ Registration completed for <b>' + participant + '</b>.<br>The workshop link will be sent to your email.';
         form.reset();
       }catch(error){
         success.className = 'success error';
