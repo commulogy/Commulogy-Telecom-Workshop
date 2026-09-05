@@ -828,12 +828,12 @@ html[dir="rtl"] .eyebrow::after{
       return;
     }
 
-    openAssistant('Thinking...');
+    openAssistant('Checking the workshop information...');
     const callbackName = 'commulogyGemini_' + Date.now();
     const script = document.createElement('script');
     const timeout = setTimeout(function(){
       cleanup();
-      reply.innerHTML = '❌ Gemini did not respond. Please try again.';
+      reply.innerHTML = '❌ لم يصل رد من الخادم خلال الوقت المحدد.<br><small>تأكد من نشر Google Apps Script كإصدار جديد، ومن صلاحية رابط Web App.</small>';
     }, 60000);
 
     function cleanup(){
@@ -844,17 +844,25 @@ html[dir="rtl"] .eyebrow::after{
 
     window[callbackName] = function(data){
       cleanup();
-      if(data && data.success){
+      if(data && data.success && data.reply){
         reply.innerHTML = escapeHtml(data.reply).replace(/\\n/g, '<br>');
+        return;
+      }
+
+      // Show the real server/API error. Never claim that Gemini is unavailable
+      // for the user unless the server explicitly reports that exact reason.
+      const serverError = data && (data.error || data.message || data.details);
+      if(serverError){
+        reply.innerHTML = '❌ تعذر الحصول على الرد.<br><small>' + escapeHtml(serverError) + '</small>';
       } else {
-        reply.innerHTML = '❌ Gemini could not answer right now. Please try again.';
+        reply.innerHTML = '❌ تعذر الحصول على رد من المساعد. أعد المحاولة أو تحقق من إعدادات الخادم.';
       }
     };
 
     script.src = WEB_APP_URL + '?action=chat&message=' + encodeURIComponent(question) + '&callback=' + callbackName;
     script.onerror = function(){
       cleanup();
-      reply.innerHTML = '❌ Connection failed. Please try again.';
+      reply.innerHTML = '❌ فشل الاتصال بخادم المساعد.<br><small>تحقق من رابط Google Apps Script ومن نشره بصلاحية Anyone.</small>';
     };
     document.body.appendChild(script);
   }
