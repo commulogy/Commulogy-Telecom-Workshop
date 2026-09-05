@@ -815,6 +815,50 @@ html[dir="rtl"] .eyebrow::after{
     return (value || '').toLowerCase().trim();
   }
 
+  function escapeHtml(value){
+    return String(value || '').replace(/[&<>'\"]/g, function(char){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','\"':'&quot;'}[char];
+    });
+  }
+
+  function askGemini(message){
+    const question = String(message || '').trim();
+    if(!question){
+      openAssistant('Please type a question first.');
+      return;
+    }
+
+    openAssistant('Thinking...');
+    const callbackName = 'commulogyGemini_' + Date.now();
+    const script = document.createElement('script');
+    const timeout = setTimeout(function(){
+      cleanup();
+      reply.innerHTML = '❌ Gemini did not respond. Please try again.';
+    }, 20000);
+
+    function cleanup(){
+      clearTimeout(timeout);
+      delete window[callbackName];
+      if(script.parentNode) script.parentNode.removeChild(script);
+    }
+
+    window[callbackName] = function(data){
+      cleanup();
+      if(data && data.success){
+        reply.innerHTML = escapeHtml(data.reply).replace(/\\n/g, '<br>');
+      } else {
+        reply.innerHTML = '❌ Gemini could not answer right now. Please try again.';
+      }
+    };
+
+    script.src = WEB_APP_URL + '?action=chat&message=' + encodeURIComponent(question) + '&callback=' + callbackName;
+    script.onerror = function(){
+      cleanup();
+      reply.innerHTML = '❌ Connection failed. Please try again.';
+    };
+    document.body.appendChild(script);
+  }
+
   function smartAnswer(message){
     const q = normalize(message);
     if(!q){
@@ -853,13 +897,13 @@ html[dir="rtl"] .eyebrow::after{
 
   window.answer = function(type){
     if(type === 'tracks'){
-      openAssistant('The workshop includes 3 sessions: Introduction to Mobile Generations (2G - 5G) on 11 September, OSP Access on 12 September, and OSP Core on 13 September. All sessions start at 8:00 PM.');
+      askGemini('What sessions are included in the workshop?');
     } else if(type === 'instructors'){
-      openAssistant('The workshop has two instructors:<br>• Dr. Mohamed El-Haddad — 11 September, Introduction to Mobile Generations (2G - 5G)<br>• Eng. Ahmed Samir — 12 September, OSP Access, and 13 September, OSP Core');
+      askGemini('Who are the workshop instructors?');
     } else if(type === 'register'){
-      openAssistant('To register, fill in your name, phone number, email, status, experience level, and choose your preferred session from the registration form.');
+      askGemini('How do I register for the workshop?');
     } else {
-      openAssistant(smartAnswer(assistantInput ? assistantInput.value : ''));
+      askGemini(assistantInput ? assistantInput.value : '');
       if(assistantInput) assistantInput.value = '';
     }
   };
@@ -876,7 +920,7 @@ html[dir="rtl"] .eyebrow::after{
   if(assistantSend){
     assistantSend.addEventListener('click', function(){
       const text = assistantInput ? assistantInput.value : '';
-      openAssistant(smartAnswer(text));
+      askGemini(text);
       if(assistantInput) assistantInput.value = '';
     });
   }
@@ -885,7 +929,7 @@ html[dir="rtl"] .eyebrow::after{
     assistantInput.addEventListener('keydown', function(e){
       if(e.key === 'Enter'){
         e.preventDefault();
-        openAssistant(smartAnswer(assistantInput.value));
+        askGemini(assistantInput.value);
         assistantInput.value = '';
       }
       if(e.key === 'Escape') closeAssistant();
