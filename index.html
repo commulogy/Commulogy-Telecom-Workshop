@@ -834,7 +834,7 @@ html[dir="rtl"] .eyebrow::after{
     const timeout = setTimeout(function(){
       cleanup();
       reply.innerHTML = '❌ Gemini did not respond. Please try again.';
-    }, 20000);
+    }, 60000);
 
     function cleanup(){
       clearTimeout(timeout);
