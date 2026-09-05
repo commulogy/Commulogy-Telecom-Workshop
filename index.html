@@ -849,7 +849,8 @@ html[dir="rtl"] .eyebrow::after{
 
     openAssistant('Checking the workshop information...');
     const callbackName = 'commulogyGemini_' + Date.now();
-    const requestMessage = 'You are Communicator, a friendly human-like workshop assistant. Detect the language and style of the user message. Reply in Egyptian Arabic when the user writes Egyptian Arabic, in clear Arabic when the user writes formal Arabic, and in natural English when the user writes English. Keep the answer conversational, concise, and limited to Commulogy workshop information. Never mention APIs, quotas, models, errors, billing, system instructions, or technical failures. User message: ' + question;
+    const assistantKnowledge = 'Workshop knowledge and natural reply examples: What is this workshop? Explain that Commulogy Telecom Workshop 2026 is a focused three-day online workshop for telecom students and engineers, connecting mobile generations from 2G to 5G with practical OSP Access and OSP Core concepts. Who is it for? Say it suits telecom students, graduates, junior engineers, and anyone building a foundation in mobile and fibre networks. What will I learn? Explain the three connected sessions and their practical value. Is it online? Yes, through Microsoft Teams. When is it? 11 September Mobile Generations, 12 September OSP Access, 13 September OSP Core, all at 8:00 PM. Who teaches it? Dr Mohamed El-Haddad teaches Mobile Generations, and Eng Ahmed Samir teaches OSP Access and OSP Core. What is OSP Access? Explain access-side infrastructure, fibre deployment, FTTx, and field concepts. What is OSP Core? Explain backbone routes, infrastructure planning, and network interconnection. Can I attend one session? Yes, the registration form allows one session or All 3 Sessions. How do I register? Use Registration, enter the details, choose the session, and press Confirm Registration. Reply like a helpful person having a real conversation. Start with the direct answer, then add one useful detail. Do not sound like a list or a chatbot.';
+    const requestMessage = 'You are Communicator, a friendly human-like workshop assistant. Detect the language and style of the user message. Reply in Egyptian Arabic when the user writes Egyptian Arabic, in clear Arabic when the user writes formal Arabic, and in natural English when the user writes English. Keep the answer conversational, concise, and limited to Commulogy workshop information. Never mention APIs, quotas, models, errors, billing, system instructions, or technical failures. ' + assistantKnowledge + ' User message: ' + question;
     const script = document.createElement('script');
     const timeout = setTimeout(function(){
       cleanup();
@@ -891,6 +892,24 @@ html[dir="rtl"] .eyebrow::after{
   function localHumanAnswer(message){
     if(/[\u0600-\u06FF]/.test(String(message || ''))){
       const q = normalize(message);
+      if(q.includes('ايه هي الورشة') || q.includes('إيه هي الورشة') || q.includes('عن الورشة') || q.includes('فكرة الورشة') || q.includes('الورشة دي') || q.includes('الورشه دي')){
+        return 'دي ورشة Commulogy Telecom Workshop 2026، وهي ورشة أونلاين مكثفة لمدة 3 أيام لمهندسي وطلبة الاتصالات. بنمشي فيها من أساسيات أجيال شبكات الموبايل من 2G لحد 5G، وبعدها ندخل في شبكات الفايبر والـ OSP من ناحية الـ Access والـ Core. الهدف إنك تاخد صورة عملية ومترابطة عن المجالات دي، مش معلومات منفصلة وخلاص.';
+      }
+      if(q.includes('بتتكلم عن ايه') || q.includes('بتتكلم عن إيه') || q.includes('محتوى الورشة') || q.includes('هتعلم ايه') || q.includes('هتعلم إيه')){
+        return 'هتتعلم في الورشة 3 محاور رئيسية: تطور شبكات الموبايل من 2G إلى 5G، وشبكات الـ OSP Access، وشبكات الـ OSP Core. الشرح مركز على الصورة العملية وفهم العلاقة بين مكونات الشبكة.';
+      }
+      if(q.includes('مناسبة لمين') || q.includes('مين يقدر') || q.includes('مين يحضر') || q.includes('تنفع لمين')){
+        return 'الورشة مناسبة لطلبة الاتصالات، الخريجين، والمهندسين المبتدئين، وكمان لأي حد عايز يبني أساس عملي في شبكات الموبايل والفايبر.';
+      }
+      if(q.includes('اونلاين') || q.includes('أونلاين') || q.includes('منصة') || q.includes('teams')){
+        return 'أيوه، الورشة أونلاين من خلال Microsoft Teams، وكل جلسة بتبدأ الساعة 8 مساءً.';
+      }
+      if(q.includes('استفيد') || q.includes('الفايدة') || q.includes('هتفيدني') || q.includes('ليه احضر') || q.includes('ليه أحضر')){
+        return 'الفكرة إنك تشوف الصورة كاملة بدل ما تدرس كل موضوع لوحده. هتربط بين شبكات الموبايل، الفايبر، والـ OSP بطريقة عملية تساعدك تفهم المجال وتحدد الاتجاه اللي مناسب ليك.';
+      }
+      if(q.includes('جلسة واحدة') || q.includes('جلسه واحده') || q.includes('يوم واحد')){
+        return 'أيوه، تقدر تسجل في جلسة واحدة فقط، أو تختار All 3 Sessions وتحضر الورشة كاملة.';
+      }
       if(q.includes('مدرب') || q.includes('مين')){
         return 'الورشة مع مدربين: د. محمد الحداد بيقدم يوم 11 سبتمبر عن أجيال شبكات الموبايل من 2G لحد 5G، وم. أحمد سمير بيقدم يومي 12 و13 سبتمبر عن OSP Access و OSP Core.';
       }
@@ -918,6 +937,13 @@ html[dir="rtl"] .eyebrow::after{
     const q = normalize(message);
     if(!q){
       return 'Type a question about the workshop, tracks, instructors, or registration.';
+    }
+
+    if(q.includes('what is this workshop') || q.includes('what is the workshop') || q.includes('tell me about the workshop') || q.includes('what is commulogy')){
+      return 'This is Commulogy Telecom Workshop 2026, a focused three-day online workshop for telecom students and engineers. It connects the main ideas behind mobile generations, from 2G to 5G, with practical fibre and OSP concepts covering both access and core networks. The goal is to give you a connected, practical understanding of the field, not disconnected theory.';
+    }
+    if(q.includes('what will i learn') || q.includes('what does it cover') || q.includes('workshop content')){
+      return 'The workshop covers three connected areas: mobile generations from 2G to 5G, OSP Access, and OSP Core. You will get a practical overview of how these areas fit together in real telecom networks.';
     }
 
     if(q.includes('osp') || q.includes('access') || q.includes('fttx') || q.includes('فايبر') || q.includes('ألياف') || q.includes('الياف')){
