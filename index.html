@@ -690,7 +690,7 @@ html[dir="rtl"] .eyebrow::after{
 
     <article class="track">
       <div class="day">12 SEPTEMBER • 8:00 PM</div>
-      <h3>Outstanding Outside Plant<br>(OSP) Access</h3>
+      <h3>Understanding Outside Plant<br>(OSP) Access</h3>
       <div class="trainer">Eng. Ahmed Samir</div>
       <p>Access-side Outside Plant concepts, from field infrastructure and fibre deployment to the customer access network.</p>
       <div class="tags"><span class="tag">OSP</span><span class="tag">Access</span><span class="tag">FTTx</span><span class="tag">Deployment</span></div>
@@ -698,7 +698,7 @@ html[dir="rtl"] .eyebrow::after{
 
     <article class="track">
       <div class="day">13 SEPTEMBER • 8:00 PM</div>
-      <h3>Outstanding Outside Plant<br>(OSP) Core</h3>
+      <h3>Understanding Outside Plant<br>(OSP) Core</h3>
       <div class="trainer">Eng. Ahmed Samir</div>
       <p>Core-side Outside Plant concepts, including backbone routes, infrastructure planning, and network interconnection.</p>
       <div class="tags"><span class="tag">OSP</span><span class="tag">Core</span><span class="tag">Backbone</span><span class="tag">Planning</span></div>
@@ -743,8 +743,8 @@ html[dir="rtl"] .eyebrow::after{
       <p>One registration form for the entire workshop. Select one session or attend all three sessions.</p>
       <div class="steps">
         <div class="step"><span class="dot"></span><span>11 September • Introduction to Mobile Generations (2G - 5G) • 8:00 PM</span></div>
-        <div class="step"><span class="dot"></span><span>12 September • Outstanding Outside Plant (OSP) Access • 8:00 PM</span></div>
-        <div class="step"><span class="dot"></span><span>13 September • Outstanding Outside Plant (OSP) Core • 8:00 PM</span></div>
+        <div class="step"><span class="dot"></span><span>12 September • Understanding Outside Plant (OSP) Access • 8:00 PM</span></div>
+        <div class="step"><span class="dot"></span><span>13 September • Understanding Outside Plant (OSP) Core • 8:00 PM</span></div>
         <div class="step"><span class="dot"></span><span>All 3 Sessions</span></div>
       </div>
     </aside>
@@ -792,8 +792,8 @@ html[dir="rtl"] .eyebrow::after{
           <select required>
             <option value="">Choose a track...</option>
             <option>Introduction to Mobile Generations (2G - 5G)</option>
-            <option>Outstanding Outside Plant (OSP) Access</option>
-            <option>Outstanding Outside Plant (OSP) Core</option>
+            <option>Understanding Outside Plant (OSP) Access</option>
+            <option>Understanding Outside Plant (OSP) Core</option>
             <option>All 3 Sessions</option>
           </select>
         </div>
@@ -909,13 +909,13 @@ html[dir="rtl"] .eyebrow::after{
   }
 
   const trackInfo = {
-    'Outstanding Outside Plant (OSP) Access': {
+    'Understanding Outside Plant (OSP) Access': {
       trainer: 'Eng. Ahmed Samir',
-      text: 'Outstanding Outside Plant (OSP) Access covers access-side infrastructure, fibre deployment, FTTx, and field-oriented concepts.'
+      text: 'Understanding Outside Plant (OSP) Access covers access-side infrastructure, fibre deployment, FTTx, and field-oriented concepts.'
     },
-    'Outstanding Outside Plant (OSP) Core': {
+    'Understanding Outside Plant (OSP) Core': {
       trainer: 'Eng. Ahmed Samir',
-      text: 'Outstanding Outside Plant (OSP) Core covers backbone routes, infrastructure planning, and network interconnection.'
+      text: 'Understanding Outside Plant (OSP) Core covers backbone routes, infrastructure planning, and network interconnection.'
     },
     'Introduction to Mobile Generations (2G - 5G)': {
       trainer: 'Dr. Mohamed El-Haddad',
@@ -1066,10 +1066,10 @@ html[dir="rtl"] .eyebrow::after{
     }
 
     if(q.includes('osp') || q.includes('access') || q.includes('fttx') || q.includes('فايبر') || q.includes('ألياف') || q.includes('الياف')){
-      return '<b>12 September • Outstanding Outside Plant (OSP) Access</b><br>Instructor: Eng. Ahmed Samir.<br>Session time: 8:00 PM.<br>Topics include access-side infrastructure, fibre deployment, FTTx, and field concepts.';
+      return '<b>12 September • Understanding Outside Plant (OSP) Access</b><br>Instructor: Eng. Ahmed Samir.<br>Session time: 8:00 PM.<br>Topics include access-side infrastructure, fibre deployment, FTTx, and field concepts.';
     }
     if(q.includes('core') || q.includes('backbone') || q.includes('تراسل') || q.includes('نقل ضوئي')){
-      return '<b>13 September • Outstanding Outside Plant (OSP) Core</b><br>Instructor: Eng. Ahmed Samir.<br>Session time: 8:00 PM.<br>Topics include backbone routes, infrastructure planning, and network interconnection.';
+      return '<b>13 September • Understanding Outside Plant (OSP) Core</b><br>Instructor: Eng. Ahmed Samir.<br>Session time: 8:00 PM.<br>Topics include backbone routes, infrastructure planning, and network interconnection.';
     }
     if(q.includes('mobile') || q.includes('gsm') || q.includes('lte') || q.includes('5g') || q.includes('2g') || q.includes('موبايل') || q.includes('محمول')){
       return '<b>11 September • Introduction to Mobile Generations (2G - 5G)</b><br>Instructor: Dr. Mohamed El-Haddad.<br>Session time: 8:00 PM.<br>The session follows mobile evolution from 2G and 3G through 4G to 5G.';
@@ -1078,7 +1078,7 @@ html[dir="rtl"] .eyebrow::after{
       return 'The workshop has two instructors:<br>• Dr. Mohamed El-Haddad — 11 September, Introduction to Mobile Generations (2G - 5G)<br>• Eng. Ahmed Samir — 12 September, OSP Access, and 13 September, OSP Core';
     }
     if(q.includes('schedule') || q.includes('day') || q.includes('days') || q.includes('يوم') || q.includes('ايام') || q.includes('أيام')){
-      return '<b>3-Day Workshop Schedule</b><br>11 September, Introduction to Mobile Generations (2G - 5G), 8:00 PM.<br>12 September, Outstanding Outside Plant (OSP) Access, 8:00 PM.<br>13 September, Outstanding Outside Plant (OSP) Core, 8:00 PM.';
+      return '<b>3-Day Workshop Schedule</b><br>11 September, Introduction to Mobile Generations (2G - 5G), 8:00 PM.<br>12 September, Understanding Outside Plant (OSP) Access, 8:00 PM.<br>13 September, Understanding Outside Plant (OSP) Core, 8:00 PM.';
     }
     if(q.includes('register') || q.includes('registration') || q.includes('تسجيل') || q.includes('اسجل') || q.includes('أسجل')){
       return 'Go to the Registration section, fill in your details, choose one session or All 3 Sessions, then press Confirm Registration.';
